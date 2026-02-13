@@ -4,11 +4,11 @@ import { Button } from "../components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select.tsx";
 import { useToast } from "../components/hooks/use-toast";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://web-sdk-backend.onrender.com";
 
 const PRODUCTS = [
   { value: "doc_verification", label: "Document Verification", description: "Standard ID document verification" },
-  { value: "enhanced_document_verification", label: "Enhanced Document Verification", description: "Advanced verification with additional checks" },
+  { value: "enhanced_doc_verification", label: "Enhanced Document Verification", description: "Advanced verification with additional checks" },
 ] as const;
 
 async function getWebToken(product: string) {
@@ -65,6 +65,10 @@ export function Index() {
         product: data.product,
         callback_url: data.callback_url,
         environment: data.environment,
+        consent_required: {
+          KE: ["ALIEN_CARD", "NATIONAL_ID", "PASSPORT"],
+          NG: ["BVN", "BVN_MFA", "DRIVERS_LICENSE", "V_NIN", "VOTER_ID"],
+        },
         partner_details: {
           partner_id: data.partner_id,
           name: "Your App Name",
@@ -85,7 +89,7 @@ export function Index() {
             variant: "destructive",
           });
         },
-        onError: (e) => {
+        onError: (e: any) => {
           console.error("Smile error:", e);
           toast({
             title: "Verification Error",
@@ -93,7 +97,7 @@ export function Index() {
             variant: "destructive",
           });
         },
-      });
+      }as any);
     } catch (e) {
       console.error(e);
       toast({
